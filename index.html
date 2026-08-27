@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberTools</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #0a0f18;
+    color: white;
+    min-height: 100vh;
+}
+
+header {
+    padding: 25px;
+    text-align: center;
+    border-bottom: 1px solid #1d2939;
+}
+
+header h1 {
+    font-size: 32px;
+}
+
+header p {
+    color: #8b9bb4;
+    margin-top: 8px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 25px;
+}
+
+.card {
+    background: #111927;
+    border: 1px solid #243247;
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    margin-bottom: 8px;
+}
+
+.card p {
+    color: #9ba9bd;
+    margin-bottom: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #34445c;
+    background: #080d15;
+    color: white;
+    font-size: 16px;
+    outline: none;
+}
+
+button {
+    margin-top: 12px;
+    padding: 13px 18px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+.result {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    background: #080d15;
+    line-height: 1.7;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #68778d;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🛡️ CyberTools</h1>
+    <p>Simple cybersecurity tools in your browser</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>🔐 Password Strength Analyzer</h2>
+        <p>Check the basic strength of a password.</p>
+
+        <input type="password" id="password" placeholder="Enter a password">
+
+        <button onclick="checkPassword()">Analyze Password</button>
+
+        <div class="result" id="passwordResult">
+            Waiting for analysis...
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🔎 URL Checker</h2>
+        <p>Check a URL for some common suspicious patterns.</p>
+
+        <input type="text" id="url" placeholder="https://example.com">
+
+        <button onclick="checkURL()">Check URL</button>
+
+        <div class="result" id="urlResult">
+            Waiting for analysis...
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    CyberTools • Educational Cybersecurity Project
+</footer>
+
+<script>
+
+function checkPassword() {
+
+    const password = document.getElementById("password").value;
+    const result = document.getElementById("passwordResult");
+
+    if (password.length === 0) {
+        result.innerHTML = "⚠️ Enter a password first.";
+        return;
+    }
+
+    let score = 0;
+
+    if (password.length >= 8) score++;
+    if (password.length >= 12) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[a-z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+
+    let strength;
+
+    if (score <= 2) {
+        strength = "🔴 Weak";
+    } else if (score <= 4) {
+        strength = "🟡 Medium";
+    } else {
+        strength = "🟢 Strong";
+    }
+
+    result.innerHTML =
+        "<b>Strength:</b> " + strength +
+        "<br><b>Length:</b> " + password.length +
+        " characters" +
+        "<br><b>Score:</b> " + score + "/6";
+
+}
+
+function checkURL() {
+
+    const url = document.getElementById("url").value.trim();
+    const result = document.getElementById("urlResult");
+
+    if (url.length === 0) {
+        result.innerHTML = "⚠️ Enter a URL first.";
+        return;
+    }
+
+    let warnings = [];
+
+    if (!url.startsWith("https://")) {
+        warnings.push("⚠️ Website does not use HTTPS.");
+    }
+
+    if (url.includes("@")) {
+        warnings.push("⚠️ URL contains '@', which can sometimes be suspicious.");
+    }
+
+    if (url.includes("login") || url.includes("verify") || url.includes("account")) {
+        warnings.push("⚠️ URL contains words commonly used in phishing links.");
+    }
+
+    if (warnings.length === 0) {
+        result.innerHTML =
+            "🟢 No obvious suspicious patterns detected.<br><br>" +
+            "This is only a basic check — it does not guarantee that the website is safe.";
+    } else {
+        result.innerHTML =
+            warnings.join("<br>") +
+            "<br><br>⚠️ This is only a basic pattern check.";
+    }
+
+}
+
+</script>
+
+</body>
+</html>
